@@ -151,3 +151,68 @@ td { padding: 14px 10px; }
 @media (max-width: 700px) { .app-shell { display: block; } .sidebar { height: auto; position: static; padding: 17px 16px; display: block; } .brand { padding: 0; } .main-nav { margin-top: 18px; display: flex; overflow-x: auto; gap: 5px; } .nav-item { white-space: nowrap; min-height: 36px; padding: 0 9px; font-size: 12px; } .sidebar-note, .sidebar-footer { display: none; } .main-content { padding: 28px 16px 50px; } .page-header { display: block; margin-bottom: 28px; } .header-actions { margin-top: 22px; } .button { flex: 1; } .panel { padding: 20px 0; } .form-grid { grid-template-columns: 1fr 1fr; } .field-wide { grid-column: 1 / -1; } .summary-column { grid-template-columns: 1fr; } .tip-box { grid-column: auto; } .saved-list { grid-template-columns: 1fr; } }
 @media (max-width: 560px) { .form-grid { grid-template-columns: 1fr; } .field-wide { grid-column: auto; } .header-actions { flex-direction: column; } .button { width: 100%; } h1 { font-size: 29px; } .saved-main { grid-template-columns: minmax(0, 1fr) auto; gap: 8px; } .saved-view-label { display: none; } }
 @media (max-width: 520px) { .recipe-modal-card { padding: 20px 17px; } .modal-stats { grid-template-columns: 1fr; gap: 8px; } .modal-ingredient-row { align-items: flex-start; flex-direction: column; gap: 3px; } .modal-ingredient-row > span:last-child { white-space: normal; } }
+@media (max-width: 900px) {
+  .app-shell { display: block; }
+  .sidebar { height: auto; position: static; padding: 16px 24px; flex-direction: row; align-items: center; gap: 24px; }
+  .brand { flex: 0 0 auto; padding: 0; }
+  .main-nav { min-width: 0; margin: 0; display: flex; gap: 4px; overflow-x: auto; }
+  .nav-item { flex: 0 0 auto; min-height: 38px; }
+  .sidebar-footer { display: none; }
+  .main-content { max-width: 100%; padding: 36px 24px 60px; }
+  .page-header { align-items: center; flex-wrap: wrap; }
+  .header-actions { flex-wrap: wrap; }
+  .workspace { gap: 30px; }
+}
+@media (max-width: 700px) {
+  .sidebar { display: block; padding: 16px; }
+  .main-nav { margin-top: 16px; }
+  .main-content { padding: 28px 16px 50px; }
+  .page-header { display: block; }
+  .header-actions { margin-top: 22px; }
+  .summary-column { grid-template-columns: 1fr; }
+  .form-grid { grid-template-columns: 1fr 1fr; }
+  .field-wide { grid-column: 1 / -1; }
+}
+@media (max-width: 560px) {
+  .form-grid { grid-template-columns: 1fr; }
+  .field-wide { grid-column: auto; }
+  .header-actions { flex-direction: column; }
+  .button { width: 100%; }
+  .saved-main { grid-template-columns: minmax(0, 1fr) auto; gap: 8px; }
+  .saved-view-label { display: none; }
+}
+@media (max-width: 900px) {
+  .sidebar { display: none; }
+  .main-content { width: 100%; max-width: 100%; padding: 28px 18px 52px; }
+  .page-header { width: 100%; }
+  .workspace { width: 100%; }
+  .editor-column, .summary-column { width: 100%; }
+}
+@media (max-width: 560px) {
+  .main-content { padding: 22px 14px 44px; }
+  .panel { padding-top: 18px; }
+  .section-heading { gap: 8px; margin-bottom: 18px; }
+  .section-heading > div { gap: 9px; }
+  h2 { font-size: 18px; }
+  .ingredients-panel table { min-width: 780px; }
+}
+@media (max-width: 700px) {
+  .ingredients-panel .table-wrap { overflow: visible; }
+  .ingredients-panel table { display: block; min-width: 0; width: 100%; }
+  .ingredients-panel thead { display: none; }
+  .ingredients-panel tbody { display: grid; gap: 12px; }
+  .ingredients-panel tr { display: grid; grid-template-columns: minmax(0, 1fr) minmax(0, 1fr); gap: 12px; padding: 14px 0; }
+  .ingredients-panel td { display: flex; flex-direction: column; align-items: stretch; gap: 4px; padding: 0; text-align: left !important; }
+  .ingredients-panel td:first-child { grid-column: 1 / -1; }
+  .ingredients-panel td:nth-child(6) { align-items: flex-start; justify-content: center; }
+  .ingredients-panel td:nth-child(7) { align-items: flex-end; justify-content: center; }
+  .ingredients-panel td:nth-child(2)::before { content: 'ปริมาณที่ใช้'; }
+  .ingredients-panel td:nth-child(3)::before { content: 'หน่วยที่ใช้'; }
+  .ingredients-panel td:nth-child(4)::before { content: 'ราคาซื้อ'; }
+  .ingredients-panel td:nth-child(5)::before { content: 'หน่วยราคา'; }
+  .ingredients-panel td:nth-child(6)::before { content: 'ต้นทุน'; }
+  .ingredients-panel td::before { color: #666; font-size: 11px; }
+  .ingredients-panel td:first-child input { font-size: 16px; font-weight: 600; }
+  .ingredients-panel td input, .ingredients-panel td select { width: 100%; }
+  .ingredients-panel .cost-cell { font-size: 14px; }
+}
