@@ -40,9 +40,9 @@ function renderIngredients() {
       <td><input class="ingredient-name" data-index="${index}" type="text" value="${escapeHtml(ingredient.name)}" aria-label="ชื่อวัตถุดิบ" /></td>
       <td><input class="ingredient-amount" data-index="${index}" type="number" min="0" step="any" value="${ingredient.amount}" aria-label="ปริมาณ" /></td>
       <td><select class="ingredient-unit" data-index="${index}" aria-label="หน่วยที่ใช้">${units.map((unit) => `<option ${unit === ingredient.unit ? 'selected' : ''}>${unit}</option>`).join('')}</select></td>
-      <td><input class="ingredient-purchase-amount" data-index="${index}" type="number" min="0" step="any" value="${ingredient.purchaseAmount ?? 1}" aria-label="จำนวนที่ซื้อ" /></td>
-      <td><input class="ingredient-price" data-index="${index}" type="number" min="0" step="any" value="${ingredient.price}" aria-label="ราคาที่ซื้อ" /></td>
+      <td><input class="ingredient-purchase-amount" data-index="${index}" type="number" min="0" step="any" value="${ingredient.purchaseAmount ?? 1}" aria-label="ปริมาณที่ซื้อ" /></td>
       <td><select class="ingredient-price-unit" data-index="${index}" aria-label="หน่วยราคา">${units.map((unit) => `<option ${unit === (ingredient.priceUnit || ingredient.unit) ? 'selected' : ''}>${unit}</option>`).join('')}</select></td>
+      <td><input class="ingredient-price" data-index="${index}" type="number" min="0" step="any" value="${ingredient.price}" aria-label="ราคาที่ซื้อ" /></td>
       <td class="cost-cell">฿ ${money(ingredientCost(ingredient))}</td>
       <td><button class="remove-row" data-index="${index}" type="button" aria-label="ลบวัตถุดิบ">×</button></td>
     </tr>`).join('');

@@ -208,9 +208,9 @@ td { padding: 14px 10px; }
   .ingredients-panel td:nth-child(8) { align-items: flex-end; justify-content: center; }
   .ingredients-panel td:nth-child(2)::before { content: 'ปริมาณที่ใช้'; }
   .ingredients-panel td:nth-child(3)::before { content: 'หน่วยที่ใช้'; }
-  .ingredients-panel td:nth-child(4)::before { content: 'จำนวนที่ซื้อ'; }
-  .ingredients-panel td:nth-child(5)::before { content: 'ราคาที่ซื้อ'; }
-  .ingredients-panel td:nth-child(6)::before { content: 'หน่วยราคา'; }
+  .ingredients-panel td:nth-child(4)::before { content: 'ปริมาณที่ซื้อ'; }
+  .ingredients-panel td:nth-child(5)::before { content: 'หน่วยราคา'; }
+  .ingredients-panel td:nth-child(6)::before { content: 'ราคาที่ซื้อ'; }
   .ingredients-panel td:nth-child(7)::before { content: 'ต้นทุน'; }
   .ingredients-panel td::before { color: #666; font-size: 11px; }
   .ingredients-panel td:first-child input { font-size: 16px; font-weight: 600; }
