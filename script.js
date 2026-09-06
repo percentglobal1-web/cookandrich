@@ -1,10 +1,10 @@
 const initialIngredients = [
-  { name: 'ข้าวสวย', amount: 200, unit: 'กรัม', price: 45, priceUnit: 'กก.' },
-  { name: 'เนื้อไก่', amount: 120, unit: 'กรัม', price: 180, priceUnit: 'กก.' },
-  { name: 'ใบกะเพรา', amount: 15, unit: 'กรัม', price: 300, priceUnit: 'กก.' },
-  { name: 'ซอสปรุงรส', amount: 15, unit: 'มล.', price: 80, priceUnit: 'ลิตร' },
-  { name: 'ไข่ไก่', amount: 1, unit: 'ฟอง', price: 4.5, priceUnit: 'ฟอง' },
-  { name: 'กล่องอาหาร', amount: 1, unit: 'ชิ้น', price: 4, priceUnit: 'ชิ้น' }
+  { name: 'ข้าวสวย', amount: 200, unit: 'กรัม', purchaseAmount: 1, price: 45, priceUnit: 'กก.' },
+  { name: 'เนื้อไก่', amount: 120, unit: 'กรัม', purchaseAmount: 1, price: 180, priceUnit: 'กก.' },
+  { name: 'ใบกะเพรา', amount: 15, unit: 'กรัม', purchaseAmount: 1, price: 300, priceUnit: 'กก.' },
+  { name: 'ซอสปรุงรส', amount: 15, unit: 'มล.', purchaseAmount: 1, price: 80, priceUnit: 'ลิตร' },
+  { name: 'ไข่ไก่', amount: 1, unit: 'ฟอง', purchaseAmount: 10, price: 45, priceUnit: 'ฟอง' },
+  { name: 'กล่องอาหาร', amount: 1, unit: 'ชิ้น', purchaseAmount: 1, price: 4, priceUnit: 'ชิ้น' }
 ];
 
 let ingredients = structuredClone(initialIngredients);
@@ -28,8 +28,9 @@ function getUnitInfo(unit) {
 function ingredientCost(ingredient) {
   const usageUnit = getUnitInfo(ingredient.unit);
   const priceUnit = getUnitInfo(ingredient.priceUnit || ingredient.unit);
-  if (usageUnit.group !== priceUnit.group) return Number(ingredient.amount || 0) * Number(ingredient.price || 0);
-  return (Number(ingredient.amount || 0) * usageUnit.factor / priceUnit.factor) * Number(ingredient.price || 0);
+  const purchaseAmount = Number(ingredient.purchaseAmount ?? 1) || 0;
+  if (!purchaseAmount || usageUnit.group !== priceUnit.group) return 0;
+  return (Number(ingredient.amount || 0) * usageUnit.factor / (purchaseAmount * priceUnit.factor)) * Number(ingredient.price || 0);
 }
 
 function renderIngredients() {
@@ -39,7 +40,8 @@ function renderIngredients() {
       <td><input class="ingredient-name" data-index="${index}" type="text" value="${escapeHtml(ingredient.name)}" aria-label="ชื่อวัตถุดิบ" /></td>
       <td><input class="ingredient-amount" data-index="${index}" type="number" min="0" step="any" value="${ingredient.amount}" aria-label="ปริมาณ" /></td>
       <td><select class="ingredient-unit" data-index="${index}" aria-label="หน่วยที่ใช้">${units.map((unit) => `<option ${unit === ingredient.unit ? 'selected' : ''}>${unit}</option>`).join('')}</select></td>
-      <td><input class="ingredient-price" data-index="${index}" type="number" min="0" step="any" value="${ingredient.price}" aria-label="ราคาซื้อ" /></td>
+      <td><input class="ingredient-purchase-amount" data-index="${index}" type="number" min="0" step="any" value="${ingredient.purchaseAmount ?? 1}" aria-label="จำนวนที่ซื้อ" /></td>
+      <td><input class="ingredient-price" data-index="${index}" type="number" min="0" step="any" value="${ingredient.price}" aria-label="ราคาที่ซื้อ" /></td>
       <td><select class="ingredient-price-unit" data-index="${index}" aria-label="หน่วยราคา">${units.map((unit) => `<option ${unit === (ingredient.priceUnit || ingredient.unit) ? 'selected' : ''}>${unit}</option>`).join('')}</select></td>
       <td class="cost-cell">฿ ${money(ingredientCost(ingredient))}</td>
       <td><button class="remove-row" data-index="${index}" type="button" aria-label="ลบวัตถุดิบ">×</button></td>
@@ -119,7 +121,7 @@ function showRecipeModal(index) {
   $('#modalPerPiece').textContent = `฿ ${money(recipe.total / servings)}`;
   $('#modalYield').textContent = `${servings} หน่วย`;
   $('#modalIngredientList').innerHTML = recipeIngredients.length ? recipeIngredients.map((ingredient) => `
-    <div class="modal-ingredient-row"><span>${escapeHtml(ingredient.name || 'ไม่ระบุชื่อ')}</span><span>${ingredient.amount} ${escapeHtml(ingredient.unit)} · ${money(ingredient.price)} บาท/${escapeHtml(ingredient.priceUnit || ingredient.unit)} <b>฿ ${money(ingredientCost(ingredient))}</b></span></div>`).join('') : '<p class="modal-empty">สูตรเก่านี้ไม่มีรายละเอียดวัตถุดิบที่บันทึกไว้</p>';
+    <div class="modal-ingredient-row"><span>${escapeHtml(ingredient.name || 'ไม่ระบุชื่อ')}</span><span>ใช้ ${ingredient.amount} ${escapeHtml(ingredient.unit)} · ซื้อ ${ingredient.purchaseAmount ?? 1} ${escapeHtml(ingredient.priceUnit || ingredient.unit)} ราคา ${money(ingredient.price)} บาท <b>฿ ${money(ingredientCost(ingredient))}</b></span></div>`).join('') : '<p class="modal-empty">สูตรเก่านี้ไม่มีรายละเอียดวัตถุดิบที่บันทึกไว้</p>';
   $('#modalNotes').textContent = recipe.notes || '';
   $('#modalNotesSection').hidden = !recipe.notes;
   $('#recipeModal').hidden = false;
@@ -159,9 +161,10 @@ document.addEventListener('input', (event) => {
   const index = Number(event.target.dataset.index);
   if (event.target.classList.contains('ingredient-name')) ingredients[index].name = event.target.value;
   if (event.target.classList.contains('ingredient-amount')) ingredients[index].amount = Number(event.target.value) || 0;
+  if (event.target.classList.contains('ingredient-purchase-amount')) ingredients[index].purchaseAmount = Number(event.target.value) || 0;
   if (event.target.classList.contains('ingredient-price')) ingredients[index].price = Number(event.target.value) || 0;
-  if (event.target.classList.contains('ingredient-amount') || event.target.classList.contains('ingredient-price')) updateRowCost(index);
-  if (event.target.id === 'servings' || event.target.id === 'profitMargin' || event.target.classList.contains('ingredient-amount') || event.target.classList.contains('ingredient-price')) updateSummary();
+  if (event.target.classList.contains('ingredient-amount') || event.target.classList.contains('ingredient-purchase-amount') || event.target.classList.contains('ingredient-price')) updateRowCost(index);
+  if (event.target.id === 'servings' || event.target.id === 'profitMargin' || event.target.classList.contains('ingredient-amount') || event.target.classList.contains('ingredient-purchase-amount') || event.target.classList.contains('ingredient-price')) updateSummary();
 });
 
 document.addEventListener('change', (event) => {
@@ -199,7 +202,7 @@ document.addEventListener('keydown', (event) => {
 });
 
 $('#addIngredientButton').addEventListener('click', () => {
-  ingredients.push({ name: '', amount: 0, unit: 'กรัม', price: 0, priceUnit: 'กรัม' });
+  ingredients.push({ name: '', amount: 0, unit: 'กรัม', purchaseAmount: 1, price: 0, priceUnit: 'กรัม' });
   renderIngredients();
   const names = document.querySelectorAll('.ingredient-name');
   names[names.length - 1].focus();
