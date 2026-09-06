@@ -1,0 +1,183 @@
+<!doctype html>
+<html lang="th">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <meta name="description" content="เครื่องมือคำนวณต้นทุนสูตรอาหารสำหรับธุรกิจ" />
+  <title>ต้นทุนอาหาร | Food Cost Calculator</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=DM+Mono:wght@400;500&family=Prompt:wght@400;500;600;700&display=swap" rel="stylesheet" />
+  <link rel="stylesheet" href="style.css" />
+</head>
+<body>
+  <div class="app-shell">
+    <aside class="sidebar">
+      <div class="brand">
+        <div class="brand-mark">฿</div>
+        <div>
+          <strong>ต้นทุนอาหาร</strong>
+          <span>FOOD COST STUDIO</span>
+        </div>
+      </div>
+
+      <nav class="main-nav" aria-label="เมนูหลัก">
+        <a class="nav-item active" href="#calculator"><span class="nav-icon">＋</span> สูตรอาหารใหม่</a>
+        <a class="nav-item" href="#saved"><span class="nav-icon">▤</span> สูตรที่บันทึกไว้ <b id="savedCount">0</b></a>
+        <a class="nav-item" href="#ingredients"><span class="nav-icon">◫</span> วัตถุดิบ</a>
+      </nav>
+
+      <div class="sidebar-note">
+        <span class="eyebrow">วันนี้</span>
+        <strong id="todayDate">—</strong>
+        <p>รู้ต้นทุนทุกจาน ก่อนตั้งราคาขาย</p>
+      </div>
+      <div class="sidebar-footer">เวอร์ชัน 1.0 / TH</div>
+    </aside>
+
+    <main class="main-content">
+      <header class="page-header">
+        <div>
+          <div class="breadcrumb">แดชบอร์ด <span>/</span> สูตรอาหารใหม่</div>
+          <h1>สร้างสูตรอาหาร</h1>
+          <p class="page-subtitle">คำนวณต้นทุนต่อหน่วยผลิต เพื่อวางราคาขายและควบคุมกำไร</p>
+        </div>
+        <div class="header-actions">
+          <button class="button button-ghost" id="resetButton" type="button">ล้างข้อมูล</button>
+          <button class="button button-dark" id="saveButton" type="button">บันทึกสูตร <span>→</span></button>
+        </div>
+      </header>
+
+      <section class="workspace" id="calculator">
+        <div class="editor-column">
+          <section class="panel recipe-info-panel">
+            <div class="section-heading">
+              <div>
+                <span class="section-number">01</span>
+                <h2>ข้อมูลสูตร</h2>
+              </div>
+              <span class="status-label"><i></i> กำลังแก้ไข</span>
+            </div>
+            <div class="form-grid">
+              <label class="field field-wide">
+                <span>ชื่อเมนู <em>*</em></span>
+                <input id="recipeName" type="text" value="ข้าวกะเพราไก่" placeholder="เช่น ข้าวกะเพราไก่" />
+              </label>
+              <label class="field">
+                <span>หมวดหมู่</span>
+                <select id="recipeCategory">
+                  <option>อาหารจานเดียว</option>
+                  <option>ของทานเล่น</option>
+                  <option>เครื่องดื่ม</option>
+                  <option>ของหวาน</option>
+                  <option>ชุดอาหาร</option>
+                </select>
+              </label>
+              <label class="field">
+                <span>จำนวนหน่วยผลิต</span>
+                <div class="input-with-unit"><input id="servings" type="number" min="1" value="1" /><span>หน่วย</span></div>
+              </label>
+            </div>
+          </section>
+
+          <section class="panel ingredients-panel" id="ingredients">
+            <div class="section-heading">
+              <div>
+                <span class="section-number">02</span>
+                <h2>ส่วนประกอบและต้นทุน</h2>
+              </div>
+              <span class="muted-label" id="ingredientTotalLabel">4 รายการ</span>
+            </div>
+            <div class="table-wrap">
+              <table>
+                <thead>
+                  <tr>
+                    <th>วัตถุดิบ</th>
+                    <th>ปริมาณ</th>
+                    <th>หน่วย</th>
+                    <th>ราคาต่อหน่วย</th>
+                    <th>ต้นทุนรวม</th>
+                    <th><span class="sr-only">ลบ</span></th>
+                  </tr>
+                </thead>
+                <tbody id="ingredientRows"></tbody>
+              </table>
+            </div>
+            <button class="add-row-button" id="addIngredientButton" type="button"><span>＋</span> เพิ่มวัตถุดิบ</button>
+          </section>
+
+          <section class="panel notes-panel">
+            <div class="section-heading compact-heading">
+              <div>
+                <span class="section-number">03</span>
+                <h2>รายละเอียดเพิ่มเติม</h2>
+              </div>
+            </div>
+            <label class="field">
+              <span>วิธีประกอบ / หมายเหตุ</span>
+              <textarea id="recipeNotes" rows="3" placeholder="เขียนวิธีทำ หรือหมายเหตุสำหรับทีมครัว..."></textarea>
+            </label>
+          </section>
+        </div>
+
+        <aside class="summary-column">
+          <section class="summary-card">
+            <div class="summary-topline"><span>สรุปต้นทุนสูตร</span><span class="summary-dot"></span></div>
+            <div class="total-cost"><span>฿</span><strong id="totalCost">0.00</strong></div>
+            <p class="total-caption">ต้นทุนรวมทั้งหมด</p>
+            <div class="summary-divider"></div>
+            <div class="metric-row"><span>ต้นทุนต่อหน่วย</span><strong id="costPerServing">฿ 0.00</strong></div>
+            <div class="metric-row"><span>ผลผลิตทั้งหมด</span><strong id="servingSummary">1 หน่วย</strong></div>
+            <div class="metric-row"><span>จำนวนวัตถุดิบ</span><strong id="ingredientSummary">4 รายการ</strong></div>
+          </section>
+
+          <section class="price-card">
+            <div class="price-card-heading"><span>ตั้งราคาขาย</span><span class="info-icon" title="คำนวณจากต้นทุนต่อหน่วย">i</span></div>
+            <label class="field">
+              <span>กำไรที่ต้องการ (%)</span>
+              <div class="input-with-unit"><input id="profitMargin" type="number" min="0" value="60" /><span>%</span></div>
+            </label>
+            <div class="suggested-price"><span>ราคาขายแนะนำ / หน่วย</span><strong id="suggestedPrice">฿ 0.00</strong></div>
+            <div class="margin-bar"><span id="marginBarFill"></span></div>
+          </section>
+
+          <div class="tip-box"><span class="tip-icon">✦</span><p><strong>เคล็ดลับ</strong><br />รวมบรรจุภัณฑ์ ท็อปปิง และเครื่องเคียงไว้เป็นส่วนประกอบ เพื่อให้ต้นทุนตรงกับการขายจริง</p></div>
+        </aside>
+      </section>
+
+      <section class="saved-section" id="saved">
+        <div class="saved-heading"><div><span class="eyebrow">คลังสูตรอาหาร</span><h2>สูตรที่บันทึกไว้</h2></div><span class="saved-count-label" id="savedCountLabel">0 สูตร</span></div>
+        <div class="saved-list" id="savedList"></div>
+      </section>
+    </main>
+  </div>
+  <div class="recipe-modal" id="recipeModal" role="dialog" aria-modal="true" aria-labelledby="modalRecipeName" hidden>
+    <div class="recipe-modal-backdrop" data-close-modal></div>
+    <section class="recipe-modal-card">
+      <div class="recipe-modal-header">
+        <div>
+          <span class="eyebrow">รายละเอียดสูตร</span>
+          <h2 id="modalRecipeName">—</h2>
+          <p id="modalRecipeMeta">—</p>
+        </div>
+        <button class="modal-close" type="button" data-close-modal aria-label="ปิดหน้าต่าง">×</button>
+      </div>
+      <div class="modal-stats">
+        <div><span>ต้นทุนรวม</span><strong id="modalTotal">฿ 0.00</strong></div>
+        <div><span>ต้นทุนต่อหน่วย</span><strong id="modalPerPiece">฿ 0.00</strong></div>
+        <div><span>ผลผลิต</span><strong id="modalYield">0 หน่วย</strong></div>
+      </div>
+      <div class="modal-ingredients">
+        <h3>ส่วนประกอบ</h3>
+        <div id="modalIngredientList"></div>
+      </div>
+      <div class="modal-notes" id="modalNotesSection" hidden>
+        <h3>หมายเหตุ</h3>
+        <p id="modalNotes"></p>
+      </div>
+    </section>
+  </div>
+  <div class="toast" id="toast" role="status" aria-live="polite"></div>
+  <script src="script.js"></script>
+</body>
+</html>
